@@ -7,13 +7,19 @@ client = Tktl()
 class NumericPayload(BaseModel):
     feature: int
 
+class NumericResponse(BaseModel):
+    result: int
+
 class CategoricPayload(BaseModel):
     feature: str
 
-@client.endpoint(X=NumericPayload, y=NumericPayload)
-def numeric_endpoint(payload: NumericPayload, track_inputs=["feature"], track_outputs=["feature"]):
-    return payload
+class CategoricResponse(BaseModel):
+    result: str
 
-@client.endpoint(X=CategoricPayload, y=CategoricPayload)
-def categoric_endpoint(payload: CategoricPayload, track_inputs=["feature"], track_outputs=["feature"]):
-    return payload
+@client.endpoint(X=NumericPayload, y=NumericResponse)
+def numeric_endpoint(payload: NumericPayload, track_inputs=["feature"], track_outputs=["result"]):
+    return NumericResponse(result=payload.feature)
+
+@client.endpoint(X=CategoricPayload, y=CategoricResponse)
+def categoric_endpoint(payload: CategoricPayload, track_inputs=["feature"], track_outputs=["result"]):
+    return CategoricResponse(result=payload.feature)
